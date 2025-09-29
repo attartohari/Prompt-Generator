@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://attaruturxproject.my.id/sitemap.xml
