@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+        <!-- Judul halaman -->
+        <title>Prompt Generator | AttarUtur X Project</title>
+      
+        <!-- Deskripsi (SEO + Google) -->
+        <meta name="description" content="Prompt Generator sederhana untuk membuat prompt AI dengan cepat dan mudah. Dibuat oleh Attaruturx Project.">
+      
+        <!-- Keywords (opsional, Google jarang pakai tapi masih oke) -->
+        <meta name="keywords" content="prompt generator, AI prompt, attaruturx, tools AI, generator prompt">
+      
+        <!-- Author -->
+        <meta name="author" content="KingAtur05">
+      
+        <!-- Open Graph (biar rapi kalau di-share ke WA, Twitter, LinkedIn) -->
+        <meta property="og:title" content="Prompt Generator | Attaruturx Project">
+        <meta property="og:description" content="Buat prompt AI dengan cepat dan mudah. Gratis & simple.">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="https://attaruturxproject.my.id">
+        <meta property="og:image" content="https://attaruturxproject.my.id/preview.png">
+      
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Prompt Generator | Attaruturx Project">
+        <meta name="twitter:description" content="Buat prompt AI dengan cepat dan mudah. Gratis & simple.">
+        <meta name="twitter:image" content="https://attaruturxproject.my.id/preview.png">
+      
+        <!-- Tailwind & Fonts -->
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="styles/main.css">
+      </head>
+      
+<body class="text-gray-200 flex items-center justify-center min-h-screen p-4 pb-16">
+    
+    <div id="background-slideshow"></div>
+
+    <!-- Welcome Screen -->
+    <div id="welcome-screen" class="text-center bg-panel-bg backdrop-blur-md border border-panel-border rounded-2xl shadow-2xl p-8 animate-fade-in-up">
+        <h1 class="text-4xl font-bold mb-2 text-white">Prompt Generator By ATTAR</h1>
+        <p class="text-lg text-text-primary mb-6">Ubah ide sederhana menjadi prompt gambar & video yang profesional</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <button id="new-prompt-btn" class="btn-cta text-white font-bold py-3 px-6 rounded-lg transition text-lg">Buat Prompt Baru</button>
+            <button id="gemini-mode-btn" class="btn-cta text-white font-bold py-3 px-6 rounded-lg transition text-lg">🔑 Buat Prompt via Token</button>
+            <button id="history-btn" class="btn-secondary font-bold py-3 px-6 rounded-lg transition text-lg">📂 Lihat Prompt Sebelumnya</button>
+        </div>
+    </div>
+
+    <!-- Generator Interface -->
+    <div id="generator-interface" class="hidden bg-panel-bg backdrop-blur-md border border-panel-border rounded-2xl shadow-2xl p-6 w-full max-w-7xl animate-fade-in-up">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-8rem)]">
+            <!-- Kolom Input (Kiri) -->
+            <div id="input-form-container" class="flex flex-col gap-4 overflow-y-auto custom-scrollbar pr-2">
+                <form id="input-form">
+                    <div class="flex flex-col gap-4">
+                        <details open>
+                            <summary class="font-bold">A. Adegan Inti</summary>
+                            <div class="flex flex-col gap-4">
+                                <div>
+                                    <label class="font-semibold flex items-center gap-2">
+                                        Subjek (Wajib)
+                                        <button type="button" id="voice-input-btn" class="ml-auto bg-transparent border-none text-xl">🎙️</button>
+                                    </label>
+                                    <input type="text" id="subject" class="form-input" placeholder="contoh: ksatria berbaju zirah perak" required>
+                                </div>
+                                <div>
+                                    <label class="font-semibold flex items-center gap-2">Aksi</label>
+                                    <input type="text" id="action" class="form-input" placeholder="contoh: berjalan, melawan naga">
+                                </div>
+                                <div>
+                                    <label class="font-semibold flex items-center gap-2">Lokasi</label>
+                                    <input type="text" id="location" class="form-input" placeholder="contoh: hutan berkabut, kota cyberpunk">
+                                </div>
+                            </div>
+                        </details>
+                        
+                        <details>
+                            <summary class="font-bold">B. Suasana & Gaya</summary>
+                            <div class="flex flex-col gap-4">
+                                <div>
+                                    <label class="font-semibold flex items-center gap-2">Mood</label>
+                                    <input type="text" id="mood" class="form-input" placeholder="Dramatis, mistis, ceria">
+                                </div>
+                                <div>
+                                    <label class="font-semibold flex items-center gap-2">Gaya</label>
+                                    <select id="style" class="form-select">
+                                        <optgroup label="🎨 Artistik">
+                                            <option value="Cinematic" data-description="Menghasilkan gambar dengan nuansa film, pencahayaan dramatis, dan komposisi yang indah.">Cinematic</option>
+                                            <option value="Studio Ghibli" data-description="Gaya animasi khas Jepang dengan visual yang dilukis tangan, penuh warna, dan magis.">Studio Ghibli</option>
+                                            <option value="Blade Runner" data-description="Suasana gelap, futuristik (cyberpunk) dengan banyak lampu neon dan nuansa kelam.">Blade Runner</option>
+                                            <option value="Pixar" data-description="Gaya animasi 3D yang cerah, ramah keluarga, dengan karakter yang ekspresif.">Pixar</option>
+                                            <option value="Dark Fantasy" data-description="Gaya fantasi yang kelam, gotik, dan misterius, seringkali dengan elemen horor.">Dark Fantasy</option>
+                                        </optgroup>
+                                        <optgroup label="📸 Realistis">
+                                            <option value="Ultra-realistic" data-description="Sangat nyata hingga sulit dibedakan dari foto, dengan detail tekstur yang tajam.">Ultra-realistic</option>
+                                            <option value="Photorealism" data-description="Berusaha meniru foto asli dengan detail pencahayaan, bayangan, dan refleksi yang akurat.">Photorealism</option>
+                                            <option value="DSLR Photography" data-description="Meniru hasil jepretan kamera DSLR profesional, seringkali dengan latar belakang blur (bokeh).">DSLR Photography</option>
+                                            <option value="8K UHD" data-description="Resolusi sangat tinggi, menghasilkan gambar yang super tajam dan jernih.">8K UHD</option>
+                                        </optgroup>
+                                        <option value="custom" data-description="Tulis gaya unik Anda sendiri di sini.">Kustom...</option>
+                                    </select>
+                                    <input type="text" id="custom-style" class="form-input mt-2 hidden" placeholder="Tulis gaya kustom Anda di sini...">
+                                    <p id="style-description" class="description-placeholder"></p>
+                                </div>
+                            </div>
+                        </details>
+                        
+                        <details open>
+                            <summary class="font-bold">C. Kamera & Pencahayaan</summary>
+                            <div class="flex flex-col gap-4">
+                                <div>
+                                    <label class="font-semibold flex items-center gap-2">Tipe Shot</label>
+                                    <select id="shot" class="form-select">
+                                        <option value="Extreme close-up" data-description="Fokus pada detail kecil seperti mata atau permukaan objek, menciptakan keintiman dan intensitas.">Extreme close-up</option>
+                                        <option value="Medium shot" data-description="Pengambilan gambar sebatas pinggang ke atas, bagus untuk dialog dan ekspresi.">Medium shot</option>
+                                        <option value="Full shot" data-description="Menampilkan seluruh subjek dari kepala hingga ujung kaki.">Full shot</option>
+                                        <option value="Long shot" data-description="Subjek terlihat namun lingkungan lebih dominan untuk menunjukkan skala.">Long shot</option>
+                                        <option value="Establishing shot" data-description="Tampilan sangat luas untuk memperkenalkan lokasi dan konteks adegan.">Establishing shot</option>
+                                        <option value="Tracking shot" data-description="Kamera bergerak mengikuti subjek yang sedang bergerak.">Tracking shot</option>
+                                        <option value="POV shot" data-description="Menampilkan adegan dari sudut pandang mata subjek.">POV shot</option>
+                                        <option value="Dutch angle" data-description="Kamera dimiringkan untuk menciptakan perasaan tegang atau tidak nyaman.">Dutch angle</option>
+                                        <option value="Overhead shot" data-description="Tampilan dari atas ke bawah, langsung menyorot subjek.">Overhead shot</option>
+                                        <option value="custom" data-description="Masukkan tipe shot kustom Anda.">Kustom...</option>
+                                    </select>
+                                    <input type="text" id="custom-shot" class="form-input mt-2 hidden" placeholder="Masukkan tipe shot kustom...">
+                                    <p id="shot-description" class="description-placeholder"></p>
+                                </div>
+                                
+                                <div>
+                                    <label class="font-semibold flex items-center gap-2">Lensa</label>
+                                    <select id="lens" class="form-select">
+                                       <option value="16mm ultra-wide" data-description="Perspektif sangat lebar dan sedikit terdistorsi, cocok untuk adegan aksi yang imersif.">16mm ultra-wide</option>
+                                       <option value="24mm wide angle" data-description="Untuk pemandangan sinematik dan interior, dengan distorsi minimal.">24mm wide angle</option>
+                                       <option value="35mm" data-description="Lensa penceritaan sinematik klasik yang serbaguna dan natural.">35mm</option>
+                                       <option value="50mm f/1.8" data-description="Lensa potret dengan perspektif mata manusia, menghasilkan latar belakang blur.">50mm f/1.8</option>
+                                       <option value="70-200mm telephoto zoom" data-description="Memadatkan latar belakang, ideal untuk subjek yang jauh.">70-200mm telephoto zoom</option>
+                                       <option value="Macro lens" data-description="Jarak dekat ekstrem untuk tekstur, serangga, dan detail kecil lainnya.">Macro lens</option>
+                                       <option value="Tilt-shift lens" data-description="Menciptakan efek miniatur atau seperti mainan, sering untuk arsitektur.">Tilt-shift lens</option>
+                                       <option value="IMAX / Large format" data-description="Skala sinematik yang epik, dengan resolusi dan kejernihan ultra-tinggi.">IMAX / Large format</option>
+                                       <option value="custom" data-description="Tentukan lensa kustom sesuai kebutuhan.">Kustom...</option>
+                                    </select>
+                                    <input type="text" id="custom-lens" class="form-input mt-2 hidden" placeholder="contoh: 28mm lensa Leica antik...">
+                                    <p id="lens-description" class="description-placeholder"></p>
+                                </div>
+                                
+                                <div>
+                                    <label class="font-semibold flex items-center gap-2">Pergerakan Kamera</label>
+                                    <select id="movement" class="form-select">
+                                        <option value="Static" data-description="Tidak ada pergerakan kamera, menghasilkan gambar yang stabil dan observasional.">Static</option>
+                                        <option value="Slow pan" data-description="Gerakan lambat ke kiri/kanan untuk memperlihatkan sebuah adegan.">Slow pan</option>
+                                        <option value="Tilt up/down" data-description="Gerakan vertikal untuk mengungkapkan subjek atau lingkungan secara dramatis.">Tilt up/down</option>
+                                        <option value="Dolly in" data-description="Kamera bergerak mendekat secara fisik, membangun ketegangan atau fokus.">Dolly in</option>
+                                        <option value="Dolly out" data-description="Kamera bergerak menjauh, menunjukkan skala atau menciptakan jarak.">Dolly out</option>
+                                        <option value="Orbit" data-description="Sebuah shot dinamis di mana kamera berputar mengelilingi subjek.">Orbit</option>
+                                        <option value="Rack focus" data-description="Memindahkan fokus antara elemen latar depan dan belakang.">Rack focus</option>
+                                        <option value="Crane shot" data-description="Gerakan vertikal yang menyapu, sering digunakan untuk adegan dramatis.">Crane shot</option>
+                                        <option value="Drone shot" data-description="Perspektif dari udara, bagus untuk pemandangan yang luas dan dinamis.">Drone shot</option>
+                                        <option value="Whip pan" data-description="Gerakan pan yang sangat cepat, menciptakan transisi blur yang energik.">Whip pan</option>
+                                        <option value="custom" data-description="Tentukan gerakan kamera kustom.">Kustom...</option>
+                                    </select>
+                                    <input type="text" id="custom-movement" class="form-input mt-2 hidden" placeholder="Masukkan pergerakan kamera kustom...">
+                                    <p id="movement-description" class="description-placeholder"></p>
+                                </div>
+                                
+                                <div>
+                                    <label class="font-semibold flex items-center gap-2">Pencahayaan</label>
+                                     <select id="lighting" class="form-select">
+                                        <option value="Natural" data-description="Pencahayaan realistis dari matahari atau sumber cahaya di lingkungan sekitar.">Natural</option>
+                                        <option value="Neon" data-description="Estetika cahaya warna-warni yang menyala, sering untuk adegan cyberpunk.">Neon</option>
+                                        <option value="Moonlight" data-description="Cahaya biru yang sejuk, lembut, dan seringkali misterius.">Moonlight</option>
+                                        <option value="Golden Hour" data-description="Cahaya keemasan yang hangat dan lembut saat matahari terbit/terbenam.">Golden Hour</option>
+                                        <option value="Rembrandt lighting" data-description="Menciptakan segitiga cahaya dramatis di pipi subjek.">Rembrandt lighting</option>
+                                        <option value="Split lighting" data-description="Setengah wajah subjek terang, setengahnya lagi dalam bayangan.">Split lighting</option>
+                                        <option value="Butterfly lighting" data-description="Gaya pencahayaan fashion yang menciptakan bayangan seperti kupu-kupu di bawah hidung.">Butterfly lighting</option>
+                                        <option value="Softbox studio lighting" data-description="Pencahayaan yang halus, merata, dan bagus dengan bayangan minimal.">Softbox studio lighting</option>
+                                        <option value="Hard light" data-description="Menciptakan bayangan yang keras, tegas, dan sangat dramatis.">Hard light</option>
+                                        <option value="Backlight / silhouette" data-description="Sumber cahaya berada di belakang subjek, menciptakan siluet.">Backlight / silhouette</option>
+                                        <option value="Low key" data-description="Adegan yang gelap dan muram dengan kontras tinggi dan bayangan pekat.">Low key</option>
+                                        <option value="High key" data-description="Adegan yang terang dan bersih dengan kontras rendah dan sedikit bayangan.">High key</option>
+                                        <option value="Practical lighting" data-description="Cahaya dari sumber yang terlihat di dalam adegan, seperti lampu atau lilin.">Practical lighting</option>
+                                        <option value="custom" data-description="Tentukan setup pencahayaan kustom.">Kustom...</option>
+                                    </select>
+                                    <input type="text" id="custom-lighting" class="form-input mt-2 hidden" placeholder="Masukkan setup pencahayaan kustom...">
+                                    <p id="lighting-description" class="description-placeholder"></p>
+                                </div>
+                            </div>
+                        </details>
+                        
+                        <details open>
+                            <summary class="font-bold">D. Detail & Efek</summary>
+                            <div class="flex flex-col gap-4">
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="font-semibold text-base">a. Detail Praktis & Adegan</label>
+                                        <p class="text-sm text-gray-400 mb-2">Jelaskan elemen-elemen fisik yang terlihat di dalam adegan.</p>
+                                        <input type="text" id="costume-details" class="form-input" placeholder="Detail Kostum: zirah tergores, tato menyala...">
+                                        <input type="text" id="props-details" class="form-input mt-2" placeholder="Properti: pedang, lentera, buku mantra...">
+                                        <input type="text" id="environment-details" class="form-input mt-2" placeholder="Lingkungan: kabut berputar, hujan deras...">
+                                        <input type="text" id="textures-details" class="form-input mt-2" placeholder="Tekstur: pori-pori kulit, karat, batu retak...">
+                                    </div>
+                                    <div>
+                                        <label class="font-semibold text-base">b. Efek Visual Sinematik (VFX)</label>
+                                        <p class="text-sm text-gray-400 mb-2">Pilih efek visual untuk meningkatkan nuansa sinematik.</p>
+                                        <div class="grid grid-cols-2 gap-x-4 gap-y-2">
+                                            <label class="flex items-center gap-2"><input type="checkbox" id="vfx_dof" class="form-checkbox"><span>Depth of Field</span></label>
+                                            <label class="flex items-center gap-2"><input type="checkbox" id="vfx_bokeh" class="form-checkbox"><span>Bokeh</span></label>
+                                            <label class="flex items-center gap-2"><input type="checkbox" id="vfx_motionblur" class="form-checkbox"><span>Motion Blur</span></label>
+                                            <label class="flex items-center gap-2"><input type="checkbox" id="vfx_lensflare" class="form-checkbox"><span>Lens Flare</span></label>
+                                            <label class="flex items-center gap-2"><input type="checkbox" id="vfx_bloom" class="form-checkbox"><span>Bloom</span></label>
+                                            <label class="flex items-center gap-2"><input type="checkbox" id="vfx_chromatic" class="form-checkbox"><span>Chromatic Aberration</span></label>
+                                            <label class="flex items-center gap-2"><input type="checkbox" id="vfx_grain" class="form-checkbox"><span>Film Grain</span></label>
+                                            <label class="flex items-center gap-2"><input type="checkbox" id="post_hdr" class="form-checkbox"><span>HDR</span></label>
+                                            <label class="flex items-center gap-2"><input type="checkbox" id="post_vhs" class="form-checkbox"><span>VHS Effect</span></label>
+                                            <label class="flex items-center gap-2"><input type="checkbox" id="post_grading" class="form-checkbox"><span>Color Grading</span></label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                         <label class="font-semibold text-base">c. Prompt Negatif</label>
+                                        <p class="text-sm text-gray-400 mb-2">Kecualikan elemen yang tidak diinginkan dari hasil gambar.</p>
+                                        <label class="flex items-center gap-2">
+                                            <input type="checkbox" id="negatives_enabled" class="form-checkbox">
+                                            <span>Aktifkan Prompt Negatif</span>
+                                        </label>
+                                        <textarea id="negatives_text" class="form-textarea mt-2 hidden" rows="3" placeholder="watermark, text, cartoon style, extra limbs..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </details>
+                    </div>
+                </form>
+                
+                <div class="grid grid-cols-2 gap-2 mt-4">
+                    <button id="randomize-btn" class="btn-cta text-white font-bold py-2 px-4 rounded-lg w-full">🎲 Randomize</button>
+                    <button id="preset-btn" class="btn-secondary font-bold py-2 px-4 rounded-lg w-full">📂 Muat Preset</button>
+                </div>
+                 <div class="mt-2">
+                    <button id="reset-btn" class="btn-secondary font-bold py-2 px-4 rounded-lg w-full">🔄 Reset Form</button>
+                </div>
+            </div>
+            
+            <!-- Kolom Output (Kanan) -->
+            <div class="flex flex-col h-full">
+                <div class="flex border-b border-panel-border mb-2 items-center">
+                    <button data-tab="banana" class="tab-btn font-bold py-2 px-4 rounded-t-lg active">🍌 Banana Prompt</button>
+                    <button data-tab="veo3" class="tab-btn font-bold py-2 px-4 rounded-t-lg">🎬 VEO3 JSON</button>
+                    <button data-tab="both" class="tab-btn font-bold py-2 px-4 rounded-t-lg">↔️ Both</button>
+                    <button id="expand-btn" class="ml-auto text-sm btn-secondary p-1 rounded-md">Perluas</button>
+                </div>
+                
+                <div id="output-container" class="output-container flex-grow relative">
+                    <pre id="banana-output" class="output-panel active custom-scrollbar whitespace-pre-wrap p-4 bg-section-header-bg rounded-b-lg h-full overflow-y-auto"></pre>
+                    <pre id="veo3-output" class="output-panel custom-scrollbar p-4 bg-section-header-bg rounded-b-lg h-full overflow-y-auto font-mono text-sm"></pre>
+                    <div id="both-output" class="split-view custom-scrollbar gap-2 h-full">
+                        <pre class="banana-side whitespace-pre-wrap p-2 bg-main-bg rounded-lg h-full overflow-y-auto"></pre>
+                        <pre class="veo3-side p-2 bg-main-bg rounded-lg h-full overflow-y-auto font-mono text-sm"></pre>
+                    </div>
+                </div>
+                
+                <div class="flex gap-2 mt-4">
+                    <button id="copy-btn" class="btn-secondary font-bold py-2 px-4 rounded-lg w-full">Salin Output</button>
+                    <button id="delete-prompt-btn" class="btn-danger text-white font-bold py-2 px-4 rounded-lg w-full">🗑️ Hapus Prompt</button>
+                </div>
+                
+                <button id="generate-btn" class="btn-cta text-white font-bold py-3 px-6 rounded-lg w-full mt-2 text-lg flex items-center justify-center gap-2">
+                    ⚡ Generate Prompt
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <button id="preview-btn" class="btn-secondary font-bold py-2 px-4 rounded-lg w-full flex items-center justify-center gap-2">
+            <span>👁️</span>
+            <span>Preview Styles</span>
+        </button>
+        <div id="preview-container" class="hidden mt-4 bg-panel-bg rounded-lg p-4 border border-panel-border">
+            <h3 class="font-bold text-highlight-accent mb-3">Recommended Styles</h3>
+            <div class="grid grid-cols-1 gap-3" id="preview-grid">
+                <!-- Style recommendations will appear here -->
+            </div>
+            <div class="mt-3 text-center text-xs text-text-secondary">
+                <p>Style recommendations based on your prompt analysis</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modals -->
+    <div id="history-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="text-xl font-bold">Riwayat Prompt</h2>
+                <button id="close-history-btn" class="close-modal text-2xl">&times;</button>
+            </div>
+            <div id="history-list" class="modal-body custom-scrollbar"></div>
+            <div class="modal-footer">
+                <button id="clear-history-btn" class="w-full btn-danger text-white font-bold py-2 px-4 rounded-lg">Hapus Semua Riwayat</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="preset-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="text-xl font-bold">Muat Preset</h2>
+                <button id="close-preset-btn" class="close-modal text-2xl">&times;</button>
+            </div>
+            <div id="preset-list" class="modal-body custom-scrollbar"></div>
+        </div>
+    </div>
+    
+    <div id="api-key-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="text-xl font-bold text-highlight-accent">🔑 Masukkan Gemini API Key</h2>
+                <button id="close-api-key-btn" class="close-modal text-2xl">&times;</button>
+            </div>
+            <div class="modal-body space-y-4">
+                <p class="text-sm text-text-secondary">Untuk menggunakan mode enrichment, Anda memerlukan Gemini API Key dari Google AI Studio.</p>
+                <input type="password" id="api-key-input" class="form-input" placeholder="Masukkan API Key Anda di sini...">
+                <div>
+                     <label class="font-semibold flex items-center gap-2">Gaya Enrichment (Gemini Flavor)</label>
+                     <select id="gemini-flavor" class="form-select">
+                        <option value="Hollywood Blockbuster">Hollywood Blockbuster</option>
+                        <option value="Fantasy Epic">Fantasy Epic</option>
+                        <option value="Sci-Fi Futuristic"> Sci-Fi Futuristic</option>
+                        <option value="Art-House / Indie">Art-House / Indie</option>
+                     </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="continue-with-api-btn" class="w-full btn-cta text-white font-bold py-2 px-4 rounded-lg">Lanjutkan</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025 Copyright By KingAtur05</p>
+            <div class="social-links">
+                <a href="https://www.instagram.com/frdn_attar/" target="_blank" class="flex items-center gap-2 hover:text-highlight-accent transition-colors">
+                    <span>📷 @frdn_attar</span>
+                </a>
+                <a href="https://wa.me/qr/3ILP6FZ4ME2SB1" target="_blank" class="flex items-center gap-2 hover:text-green-500 transition-colors">
+                    <span>💬 AttarDev</span>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <div id="loading-indicator" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-panel-bg p-6 rounded-2xl text-center">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-highlight-accent mx-auto mb-4"></div>
+            <p class="text-white">Generating your prompt...</p>
+        </div>
+    </div>
+    
+    <!-- Error Message -->
+    <div id="error-message" class="hidden fixed top-4 right-4 bg-red-600 text-white p-4 rounded-lg shadow-lg z-50 max-w-sm">
+        <div class="flex items-center justify-between">
+            <span id="error-text"></span>
+            <button onclick="document.getElementById('error-message').classList.add('hidden')" class="ml-4 text-white">&times;</button>
+        </div>
+    </div>
+    
+    <!-- Success Message -->
+    <div id="success-message" class="hidden fixed top-4 right-4 bg-green-600 text-white p-4 rounded-lg shadow-lg z-50 max-w-sm">
+        <div class="flex items-center">
+            <span>✅ </span>
+            <span id="success-text" class="ml-2"></span>
+        </div>
+    </div>
+
+    
+    
+    <script src="scripts/presets.js"></script>
+    <script src="scripts/utils.js"></script>
+    <script src="scripts/supabase.js"></script>
+    <script src="scripts/auth-system.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/app.js"></script>
+</body>
+</html>
